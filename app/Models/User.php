@@ -37,4 +37,20 @@ class User
             'password_hash' => $data['password_hash'],
         ]);
     }
+
+    public function all(): array
+    {
+        $statement = $this->connection->query('SELECT id, full_name, role FROM users ORDER BY full_name ASC');
+
+        return $statement->fetchAll();
+    }
+
+    public function find(int $id): ?array
+    {
+        $statement = $this->connection->prepare('SELECT id, full_name, email, role FROM users WHERE id = :id');
+        $statement->execute(['id' => $id]);
+        $user = $statement->fetch();
+
+        return $user ?: null;
+    }
 }
