@@ -22,15 +22,11 @@
                                 <?= e($flash['message']) ?>
                             </div>
                         <?php endif; ?>
-                        <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link <?= $activeTab === 'login' ? 'active' : '' ?>" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Авторизация</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link <?= $activeTab === 'register' ? 'active' : '' ?>" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Регистрация</button>
-                            </li>
-                        </ul>
+
+                        <!-- УБРАНО: верхнее меню вкладок -->
+
                         <div class="tab-content">
+                            <!-- LOGIN -->
                             <div class="tab-pane fade <?= $activeTab === 'login' ? 'show active' : '' ?>" id="login" role="tabpanel">
                                 <form method="post" action="/login" novalidate>
                                     <div class="mb-3">
@@ -45,13 +41,17 @@
                                         <button type="submit" class="btn btn-primary">Войти</button>
                                     </div>
                                 </form>
+
+                                <!-- Переключатель на РЕГИСТРАЦИЮ -->
                                 <p class="text-center text-muted mt-4 mb-0">
                                     У вас нету учетной записи?
-                                    <button class="btn btn-link p-0 align-baseline" type="button" data-bs-toggle="tab" data-bs-target="#register">
+                                    <button class="btn btn-link p-0 align-baseline" id="to-register" type="button">
                                         Создать учетную запись
                                     </button>
                                 </p>
                             </div>
+
+                            <!-- REGISTER -->
                             <div class="tab-pane fade <?= $activeTab === 'register' ? 'show active' : '' ?>" id="register" role="tabpanel">
                                 <form method="post" action="/register" novalidate>
                                     <div class="mb-3">
@@ -78,9 +78,11 @@
                                         <button type="submit" class="btn btn-outline-primary">Создать аккаунт</button>
                                     </div>
                                 </form>
+
+                                <!-- Переключатель на ЛОГИН -->
                                 <p class="text-center text-muted mt-4 mb-0">
                                     У вас есть учетная запись?
-                                    <button class="btn btn-link p-0 align-baseline" type="button" data-bs-toggle="tab" data-bs-target="#login">
+                                    <button class="btn btn-link p-0 align-baseline" id="to-login" type="button">
                                         Войти
                                     </button>
                                 </p>
@@ -95,19 +97,40 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap остаётся (вдруг используешь Toast/Modal и т.п.) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const desiredTab = document.body.dataset.activeTab;
-        if (!desiredTab) {
-            return;
-        }
-        const trigger = document.querySelector(`[data-bs-target="#${desiredTab}"]`);
-        if (trigger) {
-            const tab = new bootstrap.Tab(trigger);
-            tab.show();
-        }
-    });
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = ['login', 'register'];
+
+    function switchTab(id) {
+      if (!tabs.includes(id)) id = 'login';
+
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        const active = pane.id === id;
+        pane.classList.toggle('show', active);
+        pane.classList.toggle('active', active);
+      });
+
+      document.body.dataset.activeTab = id;
+
+      // Автофокус на первое поле формы
+      const autofocusSelector = id === 'login' ? '#loginEmail' : '#fullName';
+      const el = document.querySelector(autofocusSelector);
+      if (el) {
+        // Небольшая задержка, чтобы класс .show применился
+        setTimeout(() => el.focus(), 0);
+      }
+    }
+
+    // Инициализация из PHP: <body data-active-tab="...">
+    switchTab(document.body.dataset.activeTab || 'login');
+
+    // Клики по нижним ссылкам
+    document.getElementById('to-register')?.addEventListener('click', () => switchTab('register'));
+    document.getElementById('to-login')?.addEventListener('click', () => switchTab('login'));
+  });
 </script>
 </body>
 </html>
