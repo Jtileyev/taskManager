@@ -1,0 +1,47 @@
+:root {
+    --primary-color: #2B4070;
+    --accent-color: #6FC9EC;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-wrapper {
+    background: linear-gradient(135deg, rgba(43, 64, 112, 0.08), rgba(111, 201, 236, 0.18));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #1e2e4f;
+    border-color: #1e2e4f;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.app-navbar {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+}
+
+.app-footer {
+    background: var(--primary-color);
+}
